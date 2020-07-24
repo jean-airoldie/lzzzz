@@ -1,8 +1,6 @@
 use super::{Compressor, Dictionary, Preferences};
 use crate::lz4f::Result;
 use std::io::Write;
-#[cfg(any(doc, target_os = "linux"))]
-use std::os::unix::io::{AsRawFd, RawFd};
 
 /// The [`Write`]-based streaming compressor.
 ///
@@ -75,15 +73,5 @@ impl<W: Write> Write for WriteCompressor<W> {
 impl<W: Write> Drop for WriteCompressor<W> {
     fn drop(&mut self) {
         let _ = self.end();
-    }
-}
-
-#[cfg(any(doc, target_os = "linux"))]
-impl<W> AsRawFd for WriteCompressor<W>
-where
-    W: Write + AsRawFd,
-{
-    fn as_raw_fd(&self) -> RawFd {
-        self.device.as_raw_fd()
     }
 }

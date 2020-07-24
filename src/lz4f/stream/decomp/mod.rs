@@ -164,3 +164,6 @@ impl<'a> Decompressor<'a> {
         self.buffer.clear();
     }
 }
+
+#[allow(unsafe_code)]
+unsafe impl Send for Decompressor<'_> {}

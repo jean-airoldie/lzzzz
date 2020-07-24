@@ -8,11 +8,15 @@ type size_t = usize;
 pub struct LZ4FCompressionCtx {
     _private: [u8; 0],
 }
+#[allow(unsafe_code)]
+unsafe impl Send for LZ4FCompressionCtx {}
 
 #[repr(C)]
 pub struct LZ4FDecompressionCtx {
     _private: [u8; 0],
 }
+#[allow(unsafe_code)]
+unsafe impl Send for LZ4FDecompressionCtx {}
 
 #[repr(C)]
 pub struct LZ4FCompressionDict {

@@ -6,9 +6,18 @@ use std::io::prelude::*;
 mod common;
 use common::lz4f_test_set;
 
+fn is_send<T: Send>(_: &T) {}
+
 mod write_compressor {
     use super::*;
     use lzzzz::lz4f::WriteCompressor;
+
+    #[test]
+    fn assert_is_send() {
+        let mut buf = Vec::new();
+        let w = WriteCompressor::new(&mut buf, Preferences::default());
+        is_send(&w);
+    }
 
     #[test]
     fn default() {
@@ -297,6 +306,13 @@ mod write_decompressor {
 mod read_decompressor {
     use super::*;
     use lzzzz::lz4f::{ReadDecompressor, WriteCompressor};
+
+    #[test]
+    fn assert_is_send() {
+        let buf = vec![];
+        let r = ReadDecompressor::new(buf.as_slice()).unwrap();
+        is_send(&r);
+    }
 
     #[test]
     fn default() {
