@@ -76,6 +76,11 @@ impl<'a, R: BufRead> BufReadDecompressor<'a, R> {
             self.inner.decode_header_only(false);
         }
     }
+
+    /// Returns a reference to the inner reader.
+    pub(crate) fn get_ref(&self) -> &R {
+        &self.device
+    }
 }
 
 impl<R: BufRead> Read for BufReadDecompressor<'_, R> {

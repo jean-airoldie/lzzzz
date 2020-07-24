@@ -1,5 +1,7 @@
 use super::BufReadDecompressor;
 use crate::lz4f::{FrameInfo, Result};
+#[cfg(any(doc, target_os = "linux"))]
+use std::os::unix::io::{AsRawFd, RawFd};
 use std::{
     borrow::Cow,
     io::{BufReader, Read},
@@ -66,5 +68,15 @@ impl<'a, R: Read> ReadDecompressor<'a, R> {
 impl<R: Read> Read for ReadDecompressor<'_, R> {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         self.inner.read(buf)
+    }
+}
+
+#[cfg(any(doc, target_os = "linux"))]
+impl<R> AsRawFd for ReadDecompressor<'_, R>
+where
+    R: Read + AsRawFd,
+{
+    fn as_raw_fd(&self) -> RawFd {
+        self.inner.get_ref().get_ref().as_raw_fd()
     }
 }
