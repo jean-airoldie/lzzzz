@@ -113,10 +113,7 @@ impl<'a, R: AsyncBufRead + Unpin> AsyncBufReadDecompressor<'a, R> {
         let mut me = self.project();
 
         let orig_len = me.buf.len();
-        #[allow(unsafe_code)]
-        unsafe {
-            me.buf.set_len(me.buf.capacity());
-        }
+        me.buf.resize(me.buf.capacity(), 0u8);
 
         let len = me.inner.as_mut().poll_read(cx, &mut me.buf[orig_len..]);
         me.buf.resize(
